@@ -50,7 +50,10 @@ class MeasurementField(DecimalField):
 
     def from_db_value(self, value, *args, **kwargs):
         if value is not None:
-            return utils.get_measurement(measure=self.measure, value=value,)
+            return utils.get_measurement(
+                measure=self.measure,
+                value=value,
+            )
 
     def value_to_string(self, obj):
         return str(self.value_from_object(obj))
@@ -71,7 +74,11 @@ class MeasurementField(DecimalField):
 
     def formfield(self, **kwargs):
         return super().formfield(
-            **{"form_class": forms.MeasurementField, "measure": self.measure, **kwargs,}
+            **{
+                "form_class": forms.MeasurementField,
+                "measure": self.measure,
+                **kwargs,
+            }
         )
 
     @cached_property

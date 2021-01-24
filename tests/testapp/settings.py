@@ -20,13 +20,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-DATABASES = {"default": {"ENGINE": "django.db.backends.postgresql", "NAME": "measurement"}}
+DATABASES = {
+    "default": {"ENGINE": "django.db.backends.postgresql", "NAME": "measurement"}
+}
 
 ROOT_URLCONF = "tests.testapp.urls"
 
 SECRET_KEY = "foobar"
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 USE_L10N = True
 

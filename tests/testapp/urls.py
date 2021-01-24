@@ -1,6 +1,6 @@
-from django.urls import path, include
-from django.views import generic
 from django.contrib import admin
+from django.urls import path
+from django.views import generic
 
 from . import models
 
@@ -11,5 +11,5 @@ urlpatterns = [
             model=models.MeasurementTestModel, fields="__all__", success_url="/"
         ),
     ),
-    path('admin/', admin.site.urls)
+    path("admin/", admin.site.urls),
 ]

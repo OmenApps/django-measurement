@@ -96,5 +96,9 @@ class MeasurementTestModel(models.Model):
     )
 
     measurement_custom_time = MeasurementField(
-        measure=measures.Time, blank=True, null=True, max_digits=28, decimal_places=3,
+        measure=measures.Time,
+        blank=True,
+        null=True,
+        max_digits=28,
+        decimal_places=3,
     )
