@@ -1,4 +1,5 @@
 import copy
+import decimal
 import logging
 from typing import Type
 
@@ -45,8 +46,11 @@ class MeasurementField(DecimalField):
         return name, path, args, kwargs
 
     def get_prep_value(self, value):
-        if value is not None:
+        if value is not None and isinstance(value, AbstractMeasure):
             return value.si_value
+        elif value is not None and isinstance(value, decimal.Decimal):
+            # Is this accurate for Volume? and other square/cubic/factors type measures?
+            return self.measure(f"{value} {self.measure.get_base_unit_names()[0]}")
 
     def get_default_unit(self):
         return next(iter(self.measure.get_base_unit_names(measure)))
