@@ -1,0 +1,16 @@
+{% spaceless %}{% for widget in widget.subwidgets %}{% include widget.template_name %}{% endfor %}{% endspaceless %}
+{% if values_list %}
+    <table style="margin:20px;">
+        <tr>
+            <th>Unit</th>
+            <th>Value</th>
+        </tr>
+        {% for value_item in values_list %}
+            <tr>
+                <td>{{ value_item.0 }}</td>
+                <td>{{ value_item.1 }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}<br>
+{% endif %}

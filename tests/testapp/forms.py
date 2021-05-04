@@ -1,9 +1,9 @@
 from django import forms
 
-from django_measurement.forms import MeasurementField
-from tests.testapp.models import MeasurementTestModel
+from django_measurement.forms import MeasurementSelectField
+from tests.models import MeasurementTestModel
 
-from measurement import measures
+from measurement.measures import Area, Distance, Volume, VolumetricFlowRate
 
 
 class MeasurementTestForm(forms.ModelForm):
@@ -12,13 +12,21 @@ class MeasurementTestForm(forms.ModelForm):
         exclude = []
 
 
-class LabelTestForm(forms.Form):
-    simple = MeasurementField(measures.Temperature)
+class FeaturesTestForm(forms.Form):
+    simple = MeasurementSelectField(VolumetricFlowRate)
 
 
-class SITestForm(forms.Form):
-    simple = MeasurementField(measures.Time)
+class AbstractMeasureTestForm(forms.Form):
+    simple = MeasurementSelectField(Distance)
 
 
-class BiDimensionalLabelTestForm(forms.Form):
-    simple = MeasurementField(measures.Volume)
+class TwoFactorTestForm(forms.Form):
+    simple = MeasurementSelectField(Area)
+
+
+class ThreeFactorTestForm(forms.Form):
+    simple = MeasurementSelectField(Volume)
+
+
+class FractionMeasureBaseTestForm(forms.Form):
+    simple = MeasurementSelectField(VolumetricFlowRate)

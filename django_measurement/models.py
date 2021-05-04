@@ -1,5 +1,8 @@
+import copy
+import logging
 from typing import Type
 
+from django.db import connection as db_connection
 from django.db.migrations.serializer import BaseSerializer
 from django.db.migrations.writer import MigrationWriter
 from django.db.models import DecimalField
@@ -9,6 +12,8 @@ from django.utils.translation import gettext_lazy as _
 from . import forms, utils, validators
 
 from measurement.base import AbstractMeasure
+
+logger = logging.getLogger("django_measurement")
 
 
 class MeasureSerializer(BaseSerializer):
@@ -26,9 +31,7 @@ class MeasurementField(DecimalField):
     description = "Easily store, retrieve, and convert python measures."
     empty_strings_allowed = False
     default_error_messages = {
-        "invalid_type": _(
-            "'%(value)s' (%(type_given)s) value" " must be of type %(type_wanted)s."
-        ),
+        "invalid_type": _("'%(value)s' (%(type_given)s) value" " must be of type %(type_wanted)s."),
     }
 
     def __init__(self, *args, measure: Type[AbstractMeasure] = None, **kwargs):
@@ -46,7 +49,7 @@ class MeasurementField(DecimalField):
             return value.si_value
 
     def get_default_unit(self):
-        return next(iter(self.measure._units.keys()))
+        return next(iter(self.measure.get_base_unit_names(measure)))
 
     def from_db_value(self, value, *args, **kwargs):
         if value is not None:
@@ -62,9 +65,7 @@ class MeasurementField(DecimalField):
         value = self.to_python(value)
         if isinstance(value, AbstractMeasure):
             value = value.si_value
-        return connection.ops.adapt_decimalfield_value(
-            value, self.max_digits, self.decimal_places
-        )
+        return connection.ops.adapt_decimalfield_value(value, self.max_digits, self.decimal_places)
 
     def to_python(self, value):
         return value
@@ -75,11 +76,35 @@ class MeasurementField(DecimalField):
     def formfield(self, **kwargs):
         return super().formfield(
             **{
-                "form_class": forms.MeasurementField,
+                "form_class": forms.MeasurementSelectField,
                 "measure": self.measure,
                 **kwargs,
             }
         )
+
+    def db_type(self, connection):
+        """
+        If using PostgreSQL, we can take advantage of the arbitrary numeric db column size
+        https://steve.dignam.xyz/2019/10/24/arbitrary-precision-decimal-fields/
+        """
+        if utils.is_postgres():
+            return "numeric"
+        return super().db_type(connection)
+
+    def _check_decimal_places(self):
+        if utils.is_postgres():
+            return []
+        return super()._check_decimal_places()
+
+    def _check_max_digits(self):
+        if utils.is_postgres():
+            return []
+        return super()._check_max_digits()
+
+    def _check_decimal_places_and_max_digits(self, *args, **kwargs):
+        if utils.is_postgres():
+            return []
+        return super()._check_decimal_places_and_max_digits(*args, **kwargs)
 
     @cached_property
     def validators(self):

@@ -38,12 +38,8 @@ class Migration(migrations.Migration):
                         measure=measurement.measures.geometry.Distance,
                         null=True,
                         validators=[
-                            django.core.validators.MinValueValidator(
-                                Distance(mile="1")
-                            ),
-                            django.core.validators.MaxValueValidator(
-                                Distance(mile="3")
-                            ),
+                            django.core.validators.MinValueValidator(Distance(mile="1")),
+                            django.core.validators.MaxValueValidator(Distance(mile="3")),
                         ],
                     ),
                 ),
@@ -84,12 +80,8 @@ class Migration(migrations.Migration):
                         measure=measurement.measures.temperature.Temperature,
                         null=True,
                         validators=[
-                            django.core.validators.MinValueValidator(
-                                Temperature(celsius="1.00")
-                            ),
-                            django.core.validators.MaxValueValidator(
-                                Temperature(celsius="3.00")
-                            ),
+                            django.core.validators.MinValueValidator(Temperature(celsius="1.00")),
+                            django.core.validators.MaxValueValidator(Temperature(celsius="3.00")),
                         ],
                     ),
                 ),
@@ -102,12 +94,8 @@ class Migration(migrations.Migration):
                         measure="Temperature",
                         null=True,
                         validators=[
-                            django.core.validators.MinValueValidator(
-                                Temperature(celsius="1.00")
-                            ),
-                            django.core.validators.MaxValueValidator(
-                                Temperature(celsius="3.00")
-                            ),
+                            django.core.validators.MinValueValidator(Temperature(celsius="1.00")),
+                            django.core.validators.MaxValueValidator(Temperature(celsius="3.00")),
                         ],
                     ),
                 ),
