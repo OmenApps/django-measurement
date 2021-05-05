@@ -69,7 +69,11 @@ class MeasurementField(DecimalField):
         value = self.to_python(value)
         if isinstance(value, AbstractMeasure):
             value = value.si_value
-        return connection.ops.adapt_decimalfield_value(value, self.max_digits, self.decimal_places)
+        if isinstance(value, int):
+            value = decimal.Decimal(value)
+        return connection.ops.adapt_decimalfield_value(
+            value, self.max_digits, self.decimal_places
+        )
 
     def to_python(self, value):
         return value
