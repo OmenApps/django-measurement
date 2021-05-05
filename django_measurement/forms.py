@@ -124,7 +124,7 @@ class MeasurementSelectWidget(forms.MultiWidget):
 
         context = super().get_context(name, value, attrs)
 
-        if value is not None and type(value) is list:
+        if value is not None and type(value) is list and value[0] is not None:
             try:
                 dec_value = Decimal(str(value[0]))
             except DecimalException:
